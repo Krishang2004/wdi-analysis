@@ -1,0 +1,104 @@
+---
+title: "World Development Indicators (2022) – Analysis"
+author: "Krishang Shah"
+date: "2025-10-07"
+format:
+  html:
+    toc: true
+    number-sections: true
+  pdf:
+    toc: true
+    number-sections: true
+execute:
+  echo: false  
+bibliography: references.bib
+---
+
+### Overview
+One-page, reproducible WDI snapshot for 2022 using simple EDA and plots.
+Data are sourced from the World Bank’s World Development Indicators [@worldbank-wdi].  
+This report is generated with Quarto to ensure reproducibility [@quarto-docs].
+
+### Data Loading
+Read the provided CSV and quickly inspect the first rows.
+```{python}
+# Load the dataset
+import pandas as pd
+
+wdi = pd.read_csv("wdi.csv")
+
+# Display the first few rows
+wdi.head()
+```
+
+### Exploratory Data Analysis
+Structure, summary stats, and missingness check for basic data health.
+```{python}
+#| echo: true              
+# Exploratory Data Analysis (EDA)
+wdi.info()
+wdi.describe()
+wdi.isna().sum()
+```
+
+### Summary of Findings from EDA
+
+- The dataset contains **217 observations** across **14 indicators** for various countries in 2022.  
+- Some indicators, such as *Adult Literacy Rate* and *Life Expectancy*, have many missing values, while variables like *GDP per Capita* and *Inflation Rate* are more complete.  
+- The numerical summary shows large variation in GDP per capita and unemployment rates, suggesting strong economic diversity across countries.  
+- We will focus our visual analysis on three indicators: **GDP per capita**, **Life Expectancy**, and **Unemployment Rate**, as they reflect key aspects of economic well-being, health, and labor outcomes.
+
+### GDP per Capita vs Life Expectancy
+```{python}
+#| label: fig-gdp-life
+#| fig-cap: "GDP per Capita vs Life Expectancy (2022). Source: World Bank WDI (2022)."
+import matplotlib.pyplot as plt
+plt.figure(figsize=(8,6))
+plt.scatter(wdi["gdp_per_capita"], wdi["life_expectancy"])
+plt.title("GDP per Capita vs Life Expectancy (2022)")
+plt.xlabel("GDP per Capita (current US$)")
+plt.ylabel("Life Expectancy (years)")
+plt.grid(True)
+plt.show()
+```
+
+- Clear positive, *diminishing-returns* pattern: big life-expectancy gains at lower incomes that taper off as GDP per capita rises.
+- A few outliers deviate from the curve, but overall the association is tight—suggesting income is a strong correlate of longevity in 2022.
+
+
+### Top 10 Countries by Unemployment Rate
+```{python}
+#| label: fig-unemp
+#| fig-cap: "Top 10 Countries by Unemployment Rate (2022). Source: World Bank WDI (2022)."
+top10_unemp = wdi.nlargest(10, "unemployment_rate")
+import matplotlib.pyplot as plt
+plt.figure(figsize=(10,6))
+plt.bar(top10_unemp["country"], top10_unemp["unemployment_rate"])
+plt.title("Top 10 Countries by Unemployment Rate (2022)")
+plt.xlabel("Country")
+plt.ylabel("Unemployment Rate (%)")
+plt.xticks(rotation=45, ha="right")
+plt.tight_layout()
+plt.show()
+```
+
+- Unemployment is highly concentrated in a small set of countries (≈20–38%), indicating substantial labor-market stress at the top of the distribution.
+- Country rankings highlight regional and structural differences; policy context matters when comparing rates across economies.
+
+### Key Statistics Table
+```{python}
+#| label: tbl-summary
+#| tbl-cap: "Summary statistics for key 2022 indicators — GDP per capita, life expectancy, unemployment rate. Source: World Bank WDI (2022)."
+key_indicators = ["gdp_per_capita", "life_expectancy", "unemployment_rate"]
+summary_table = wdi[key_indicators].describe().T[["mean","min","max"]].round(2)
+summary_table
+```
+
+
+### Discussion & Cross-References
+As shown in **@fig-gdp-life**, countries with higher GDP per capita tend to have longer life expectancy, reflecting the positive relationship between income and health outcomes.  
+
+Meanwhile, **@fig-unemp** displays the ten countries with the highest unemployment rates in 2022, revealing wide differences in labor market conditions.  
+
+Finally, **@tbl-summary** summarizes the main indicators used in this analysis.
+

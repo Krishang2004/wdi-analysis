@@ -1,0 +1,83 @@
+---
+title: "World Development Indicators (2022) – Key Insights"
+author: "Krishang Shah"
+date: "2025-10-07"
+format:
+  revealjs:
+    theme: simple
+    transition: fade
+    slide-number: true
+---
+```{python}
+#| label: setup
+#| echo: false
+import pandas as pd
+import matplotlib.pyplot as plt
+wdi = pd.read_csv("wdi.csv")
+```
+
+## Overview
+- Course: QTM 350 — Literate Programming with Quarto
+- Dataset: World Development Indicators (2022)
+- Goal: Summarize key indicators and highlight patterns
+
+## Data
+- Source: World Bank WDI
+- Observations: 217 countries
+- Indicators: 14 (economic, health, labor)
+
+## Focus Indicators
+- GDP per Capita
+- Life Expectancy
+- Unemployment Rate
+
+## GDP per Capita vs Life Expectancy
+```{python}
+#| label: s-fig-gdp-life
+#| echo: false
+#| fig-cap: "GDP per Capita vs Life Expectancy (2022). Source: World Bank WDI (2022)."
+
+plt.figure(figsize=(8,6))
+plt.scatter(wdi["gdp_per_capita"], wdi["life_expectancy"])
+plt.title("GDP per Capita vs Life Expectancy (2022)")
+plt.xlabel("GDP per Capita (current US$)")
+plt.ylabel("Life Expectancy (years)")
+plt.grid(True)
+plt.show()
+```
+
+## Top 10 Countries by Unemployment Rate
+```{python}
+#| label: s-fig-unemp
+#| echo: false
+#| fig-cap: "Top 10 Countries by Unemployment Rate (2022). Source: World Bank WDI (2022)."
+top10_unemp = wdi.nlargest(10, "unemployment_rate")
+
+plt.figure(figsize=(10,6))
+plt.bar(top10_unemp["country"], top10_unemp["unemployment_rate"])
+plt.title("Top 10 Countries by Unemployment Rate (2022)")
+plt.xlabel("Country")
+plt.ylabel("Unemployment Rate (%)")
+plt.xticks(rotation=45, ha="right")
+plt.tight_layout()
+plt.show()
+```
+
+## Key Stats Table
+```{python}
+#| label: s-tbl-summary
+#| echo: false
+#| tbl-cap: "Summary statistics for key 2022 indicators — GDP per capita, life expectancy, unemployment rate. Source: World Bank WDI (2022)."
+key_indicators = ["gdp_per_capita", "life_expectancy", "unemployment_rate"]
+summary_table = wdi[key_indicators].describe().T[["mean","min","max"]].round(2)
+summary_table
+```
+
+## Key Findings (Text Summary)
+- Wide dispersion in GDP per capita and unemployment
+- Positive relationship between income and longevity
+- Labor market outcomes vary substantially across countries
+
+## Conclusion
+- Simple, reproducible workflow with Quarto
+- These indicators provide a compact view of prosperity, health, and labor conditions
