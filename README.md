@@ -3,10 +3,10 @@
 **Repository:**  
 https://github.com/Krishang2004/wdi-analysis
 
-**HTML Report:**  
-https://Krishang2004.github.io/wdi-analysis/report.html
+**HTML Report (GitHack):** 
+https://raw.githack.com/Krishang2004/wdi-analysis/main/docs/report.html  
 
-**Slides (Reveal.js):**  
-https://Krishang2004.github.io/wdi-analysis/slides.html
+**Slides (GitHack):**
+https://raw.githack.com/Krishang2004/wdi-analysis/main/docs/slides.html
 
 **Included files:** `report.qmd`, `slides.qmd`, `references.bib`, `wdi.csv`, and **report.pdf** (in repo).
